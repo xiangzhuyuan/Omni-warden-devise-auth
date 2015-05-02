@@ -31,25 +31,25 @@ describe Warden::Manager do
   end
 
   it "should respond to :serialize" do
-    serializer_respond_to?(:serialize).should == true
+    expect(serializer_respond_to?(:serialize)).to eq(true)
   end
 
   it "should respond to :deserialize" do
-    serializer_respond_to?(:deserialize).should == true
+    expect(serializer_respond_to?(:deserialize)).to eq(true)
   end
 
   it "should respond to {scope}_deserialize if Manager.serialize_from_session is called with scope" do
     Rack::Builder.new do 
       Warden::Manager.serialize_from_session ( :admin ) { |n| n }
     end
-    serializer_respond_to?(:admin_deserialize).should == true
+    expect(serializer_respond_to?(:admin_deserialize)).to eq(true)
   end
 
   it "should respond to {scope}_serialize if Manager.serialize_into_session is called with scope" do
     Rack::Builder.new do 
       Warden::Manager.serialize_into_session(:admin) { |n| n }
     end
-    serializer_respond_to?(:admin_serialize).should == true
+    expect(serializer_respond_to?(:admin_serialize)).to eq(true)
   end
 
   def initialize_with_scope(scope, &block)
@@ -66,11 +66,11 @@ describe Warden::Manager do
     end
     serializer = Warden::SessionSerializer.new(@env)
     serializer.store("user", :admin)
-    serialized_object.should == "user"
+    expect(serialized_object).to eq("user")
   end
 
   it "should not have a {scope}_serialize by default" do
-    serializer_respond_to?(:admin_serialize).should == false
+    expect(serializer_respond_to?(:admin_serialize)).to eq(false)
   end
 
   it "should execute {scope}_serialize when calling store with a scope" do
@@ -82,7 +82,7 @@ describe Warden::Manager do
 
     serializer = Warden::SessionSerializer.new(@env)
     serializer.store("user", :admin)
-    serialized_object.should == "user"
+    expect(serialized_object).to eq("user")
   end
 
 
@@ -100,7 +100,7 @@ describe Warden::Manager do
     @env['rack.session'][serializer.key_for(:admin)] = "test"
     serializer.fetch(:admin)
 
-    serialized_object.should == "test"
+    expect(serialized_object).to eq("test")
   end
 
   it "should execute deserialize if {scope}_deserialize is not present" do
@@ -117,7 +117,7 @@ describe Warden::Manager do
     @env['rack.session'][serializer.key_for(:admin)] = "test"
     serializer.fetch(:admin)
 
-    serialized_object.should == "test"
+    expect(serialized_object).to eq("test")
   end
 
 end
